@@ -1,6 +1,8 @@
 package br.com.sgpi.logistica;
 
-//@SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
 class LogisticaApplicationTests {
 
 //	@Test

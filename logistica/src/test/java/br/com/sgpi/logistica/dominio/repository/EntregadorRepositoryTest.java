@@ -3,6 +3,7 @@ package br.com.sgpi.logistica.dominio.repository;
 import br.com.sgpi.logistica.dominio.enumeration.StatusEntregador;
 import br.com.sgpi.logistica.dominio.enumeration.Veiculo;
 import br.com.sgpi.logistica.dominio.model.entity.Entregador;
+import br.com.sgpi.logistica.util.Util;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ class EntregadorRepositoryTest {
         void deveCadastrarUmEntregador() {
 
             //arrange
-            var entregador = gerarEntregador();
+            var entregador = Util.gerarEntregador();
             Mockito.when(entregadorRepository.save(Mockito.any(Entregador.class))).thenReturn(entregador);
 
             //act
@@ -52,7 +53,7 @@ class EntregadorRepositoryTest {
         @Test
         void deveDesativarUmEntregador() {
             //arrange
-            var entregador = gerarEntregador();
+            var entregador = Util.gerarEntregador();
             entregador.desativar();
             Mockito.when(entregadorRepository.save(Mockito.any(Entregador.class))).thenReturn(entregador);
 
@@ -81,7 +82,7 @@ class EntregadorRepositoryTest {
         @Test
         void deveConsultarUmEntregador() {
             //arrange
-            var entregador = gerarEntregador();
+            var entregador = Util.gerarEntregador();
             entregador.setId(1L);
 
             Mockito.when(entregadorRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(entregador));
@@ -105,8 +106,8 @@ class EntregadorRepositoryTest {
         void deveConsultarMaisDeUmEntregador() {
 
             //arange
-            var entregador1 = gerarEntregador();
-            var entregador2 = gerarEntregador();
+            var entregador1 = Util.gerarEntregador();
+            var entregador2 = Util.gerarEntregador();
             var listaDeEntregadores = Arrays.asList(entregador1, entregador2);
 
             Mockito.when(entregadorRepository.findAll()).thenReturn(listaDeEntregadores);
@@ -118,15 +119,6 @@ class EntregadorRepositoryTest {
             assertThat(resultado).hasSize(2).contains(entregador1, entregador2);
         }
 
-    }
-
-    private Entregador gerarEntregador() {
-        return Entregador.builder()
-                .nome("Carlos")
-                .statusEntregador(StatusEntregador.DISPONIVEL)
-                .veiculo(Veiculo.CARRO)
-                .latitude(BigDecimal.ZERO)
-                .longitude(BigDecimal.ZERO).build();
     }
 }
 

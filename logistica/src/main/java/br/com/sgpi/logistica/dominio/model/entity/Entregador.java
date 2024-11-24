@@ -50,4 +50,8 @@ public class Entregador {
     public void desativar() {
         this.statusEntregador = StatusEntregador.DESATIVADO;
     }
+
+    public boolean isAtivo() {
+        return !StatusEntregador.DESATIVADO.equals(this.statusEntregador);
+    }
 }
