@@ -142,10 +142,15 @@ class PedidoServiceTest {
         void deveEntregarPedido() {
             // Arrange
             Long id = 1L;
+            Entregador entregador = Util.gerarEntregador();
+            entregador.setId(id);
             Pedido pedido = new Pedido();
+            pedido.setId(id);
             pedido.setStatus(StatusPedido.PRONTO);
+            pedido.setEntregador(entregador);
 
             when(pedidoRepository.porIdComItens(id)).thenReturn(pedido);
+
 
             // Act
             pedidoService.entregarPedido(id);

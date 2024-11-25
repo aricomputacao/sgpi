@@ -9,5 +9,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>logistica</module>
+        <module>cliente</module>
     </modules>
 </project>
