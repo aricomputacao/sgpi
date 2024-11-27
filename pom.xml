@@ -10,5 +10,7 @@
     <modules>
         <module>logistica</module>
         <module>cliente</module>
+        <module>server</module>
+        <module>gateway</module>
     </modules>
 </project>

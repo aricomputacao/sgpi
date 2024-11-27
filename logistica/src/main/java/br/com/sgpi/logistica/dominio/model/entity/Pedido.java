@@ -1,12 +1,14 @@
 package br.com.sgpi.logistica.dominio.model.entity;
 
 import br.com.sgpi.logistica.dominio.enumeration.StatusPedido;
-import br.com.sgpi.logistica.dominio.util.Present;
+import br.com.sgpi.logistica.dominio.util.validators.Criacao;
+import br.com.sgpi.logistica.dominio.util.validators.Present;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,9 +29,9 @@ public class Pedido {
     @Column(name = "ped_id")
     private Long id;
 
-    @Present
+    @Present(groups = Criacao.class)
     @NotNull
-    @Column(name = "ped_data_entrada", nullable = false)
+    @Column(name = "ped_data_entrada", nullable = false, updatable = false)
     private LocalDateTime dataEntrada;
 
     @FutureOrPresent
@@ -45,7 +47,12 @@ public class Pedido {
     private StatusPedido status;
 
     @NotEmpty
-    @Column(name = "ped_destino")
+    @CPF
+    @Column(name = "ped_cpf_cliente", nullable = false, updatable = false)
+    private String cpfCliente;
+
+    @NotEmpty
+    @Column(name = "ped_destino", nullable = false)
     private String enderecoDestino;
 
     @ManyToOne

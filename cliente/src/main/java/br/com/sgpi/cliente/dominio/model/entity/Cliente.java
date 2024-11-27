@@ -7,8 +7,8 @@ import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
-@Table(name = "cliente", schema = "logistica")
-@SequenceGenerator(name = "seq_cliente_id", sequenceName = "seq_cliente_id", allocationSize = 1, schema = "logistica")
+@Table(name = "cliente", schema = "cliente")
+@SequenceGenerator(name = "seq_cliente_id", sequenceName = "seq_cliente_id", allocationSize = 1, schema = "cliente")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -2,10 +2,11 @@ package br.com.sgpi.logistica.dominio.model.dto;
 
 import br.com.sgpi.logistica.dominio.enumeration.StatusPedido;
 import br.com.sgpi.logistica.dominio.model.entity.Entregador;
-import br.com.sgpi.logistica.dominio.util.CampoNaoPermitido;
+import br.com.sgpi.logistica.dominio.util.validators.CampoNaoPermitido;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,10 +26,13 @@ public class PedidoDto {
     private LocalDateTime dataEntrada;
     private LocalDateTime previsaoEntrega;
     private LocalDateTime dataEntrega;
-    @NonNull
+    @NotNull
     private StatusPedido status;
     @NotEmpty
     private String enderecoDestino;
+    @NotEmpty
+    @CPF
+    private String cpfCliente;
     private Entregador entregador;
     @NotNull
     private List<ItemDto> itens = new ArrayList<>();

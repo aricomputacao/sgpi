@@ -1,4 +1,4 @@
-package br.com.sgpi.logistica.dominio.util;
+package br.com.sgpi.logistica.dominio.util.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

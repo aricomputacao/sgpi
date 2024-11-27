@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
+
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     /**
@@ -30,4 +33,5 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query(value = "SELECT p from Pedido p LEFT JOIN FETCH p.itens where p.id = :id")
     Pedido porIdComItens(Long id);
 
+    List<Pedido> findAllByStatusIn(Collection<StatusPedido> statuses);
 }
