@@ -1,6 +1,7 @@
 package br.com.sgpi.logistica.dominio.enumeration;
 
 public enum StatusPedido {
+    REALIZADO,
     CANCELADO,
     NAO_AUTORIZADO,
     PRONTO,

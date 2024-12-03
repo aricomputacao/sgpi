@@ -1,6 +1,7 @@
 package br.com.sgpi.logistica.infra.exception;
 
 import br.com.sgpi.logistica.infra.util.MessageService;
+import feign.FeignException;
 import jakarta.el.MethodNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;

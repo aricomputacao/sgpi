@@ -3,6 +3,7 @@ package br.com.sgpi.logistica.apllication.controller;
 import br.com.sgpi.logistica.apllication.util.UriUtil;
 import br.com.sgpi.logistica.dominio.enumeration.StatusPedido;
 import br.com.sgpi.logistica.dominio.model.dto.PedidoDto;
+import br.com.sgpi.logistica.dominio.service.ClienteService;
 import br.com.sgpi.logistica.dominio.service.PedidoService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
@@ -21,7 +22,8 @@ import java.util.List;
 @Slf4j
 public class PedidoController {
 
-    private PedidoService service;
+    private final PedidoService service;
+    private final ClienteService clienteService;
 
     @GetMapping()
     public List<PedidoDto> listarTodos() {
@@ -49,26 +51,14 @@ public class PedidoController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{idPedido}/{idEntregador}/alocar")
-    @CircuitBreaker(name = "comunicarSaida", fallbackMethod = "pedidoAlocadoSemComunicarAoCliente")
     public void alocarPedido(@PathVariable Long idPedido, @PathVariable Long idEntregador) {
-        service.alocarPedido(idPedido, idEntregador);
+        clienteService.alocarPedido(idPedido, idEntregador);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{id}/entregar")
-    @CircuitBreaker(name = "comunicarEntrega", fallbackMethod = "pedidoEntregueSemComunicarAoCliente")
     public void entregarPedido(@PathVariable @NotNull Long id) {
-        service.entregarPedido(id);
+        clienteService.entregarPedido(id);
     }
 
-    public void pedidoAlocadoSemComunicarAoCliente(Long idPedido, Long idEntregador, Exception e) {
-        service.pedidoAlocadoSemComunicarAoCliente(idPedido, idEntregador, e);
-        log.info("Executando fallbackMethod: pedidoAlocadoSemComunicarAoCliente para Pedido: {} e Entregador: {} ",
-                idPedido, idEntregador);
-    }
-
-    public void pedidoEntregueSemComunicarAoCliente(Long id, Exception e) {
-        service.pedidoEntregueSemComunicarAoCliente(id, e);
-        log.info("Executando fallbackMethod: pedidoEntregueSemComunicarAoCliente para Pedido: {} ", id);
-    }
 }

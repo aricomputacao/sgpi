@@ -1,9 +1,9 @@
 package br.com.sgpi.logistica.dominio.util.schedulers;
 
-import br.com.sgpi.logistica.apllication.http.ClienteClient;
 import br.com.sgpi.logistica.dominio.enumeration.StatusPedido;
 import br.com.sgpi.logistica.dominio.model.entity.Pedido;
 import br.com.sgpi.logistica.dominio.repository.PedidoRepository;
+import br.com.sgpi.logistica.dominio.service.ClienteService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,11 +18,11 @@ import java.util.List;
 public class TarefaAgendada {
 
     private final PedidoRepository pedidoRepository;
-    private final ClienteClient clienteClient;
+    private final ClienteService clienteService;
 
     // Executa a cada 30 segundos
     @Scheduled(fixedRate = 30000)
-    public void executarTarefaComFrequenciaFixa() {
+    public void processarPedidos() {
 
         List<Pedido> lista = pedidoRepository.findAllByStatusIn(Arrays
                 .asList(StatusPedido.ALOCADO_SEM_COMUNICACAO, StatusPedido.ENTREGUE_SEM_COMUNICACAO));
@@ -32,11 +32,11 @@ public class TarefaAgendada {
                 log.info("Comunicando pedido: {} com Status: {}", pedido.getId(), pedido.getStatus());
                 switch (pedido.getStatus()) {
                     case ALOCADO_SEM_COMUNICACAO:
-                        clienteClient.comunicarSaida(pedido.getCpfCliente());
+                        clienteService.alocarPedido(pedido.getId(), pedido.getEntregador().getId());
                         pedido.setStatus(StatusPedido.SAIU_PARA_ENTREGA);
                         break;
                     case ENTREGUE_SEM_COMUNICACAO:
-                        clienteClient.comunicarEntrega(pedido.getCpfCliente());
+                        clienteService.entregarPedido(pedido.getId());
                         pedido.setStatus(StatusPedido.ENTREGUE);
                         break;
                     default:

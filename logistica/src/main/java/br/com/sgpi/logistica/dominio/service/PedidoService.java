@@ -1,6 +1,5 @@
 package br.com.sgpi.logistica.dominio.service;
 
-import br.com.sgpi.logistica.apllication.http.ClienteClient;
 import br.com.sgpi.logistica.dominio.enumeration.StatusPedido;
 import br.com.sgpi.logistica.dominio.model.dto.PedidoDto;
 import br.com.sgpi.logistica.dominio.model.entity.Entregador;
@@ -35,12 +34,12 @@ public class PedidoService {
     private final ItemPedidoRepository itemPedidoRepository;
     private final EntregadorRepository entregadorRepository;
     private final PedidoMapper pedidoMapper;
-    private ClienteClient clienteClient;
 
 
     public List<PedidoDto> obterTodos() {
         return repository.findAll().stream()
-                .map(p -> pedidoMapper.entityToDto(p)).collect(Collectors.toList());
+                .map(p -> pedidoMapper.entityToDto(p))
+                .collect(Collectors.toList());
     }
 
     public PedidoDto obterPorId(Long id) {
@@ -64,7 +63,6 @@ public class PedidoService {
     }
 
     public PedidoDto atualizaStatus(Long id, StatusPedido dto) {
-
         Pedido pedido = repository.porIdComItens(id);
         if (pedido == null) {
             throw new EntityNotFoundException();
@@ -106,9 +104,9 @@ public class PedidoService {
         }
         pedido.setDataEntrega(LocalDateTime.now());
         pedido.setStatus(StatusPedido.ENTREGUE);
-        log.info("****** Pedido: {} entregue com sucesso.", pedido.getId());
         repository.save(pedido);
         clienteClient.comunicarEntrega(pedido.getCpfCliente());
+        log.info("****** Pedido: {} entregue com sucesso.", pedido.getId());
         return pedidoMapper.entityToDto(pedido);
     }
 

@@ -10,6 +10,7 @@ import br.com.sgpi.logistica.dominio.model.mapper.PedidoMapper;
 import br.com.sgpi.logistica.dominio.repository.EntregadorRepository;
 import br.com.sgpi.logistica.dominio.repository.ItemPedidoRepository;
 import br.com.sgpi.logistica.dominio.repository.PedidoRepository;
+import br.com.sgpi.logistica.dominio.util.validators.Criacao;
 import br.com.sgpi.logistica.infra.exception.RegraDeNegocioException;
 import br.com.sgpi.logistica.util.Util;
 import jakarta.validation.ConstraintViolation;
@@ -27,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +41,9 @@ class PedidoServiceTest {
 
     @InjectMocks
     private PedidoService pedidoService;
+
+    @Mock
+    private ClienteClient clienteClient;
 
     @Mock
     private PedidoRepository pedidoRepository;
@@ -75,9 +80,15 @@ class PedidoServiceTest {
         void naoDeveCadastrarUmPedidoComEntradaNoPassado() throws Exception {
             //arrange
             Pedido pedido = Util.gerarPedidoComDataInvalida();
-            //act+assert
-            Assertions.assertTrue(checarExceptionNomeCampo("dataEntrada", pedido));
+            // Act
+            Set<ConstraintViolation<Pedido>> violacoes = validator.validate(pedido, Criacao.class);
 
+            // Assert
+            Assertions.assertFalse(violacoes.isEmpty(), "A validação deveria falhar para dataEntrada no passado");
+            Assertions.assertTrue(
+                    violacoes.stream().anyMatch(v -> "dataEntrada".equals(v.getPropertyPath().toString())),
+                    "A violação esperada deveria ser no campo 'dataEntrada'"
+            );
         }
 
         @Test
@@ -138,27 +149,75 @@ class PedidoServiceTest {
                     () -> pedidoService.alocarPedido(idPedido, idEntregador));
         }
 
+
         @Test
-        void deveEntregarPedido() {
+        void deveEntregarPedidoComSucesso() {
             // Arrange
             Long id = 1L;
-            Entregador entregador = Util.gerarEntregador();
-            entregador.setId(id);
-            Pedido pedido = new Pedido();
-            pedido.setId(id);
-            pedido.setStatus(StatusPedido.PRONTO);
-            pedido.setEntregador(entregador);
+            Pedido pedidoMock = Util.gerarPedidoComEntregador();
 
-            when(pedidoRepository.porIdComItens(id)).thenReturn(pedido);
-
+            when(pedidoRepository.porIdComItens(id)).thenReturn(pedidoMock);
+            when(pedidoMapper.entityToDto(pedidoMock)).thenReturn(new PedidoDto());
 
             // Act
-            pedidoService.entregarPedido(id);
+            PedidoDto resultado = pedidoService.entregarPedido(id);
 
             // Assert
-            assertEquals(StatusPedido.PRONTO, pedido.getStatus());
-            verify(pedidoRepository).atualizaStatus(StatusPedido.ENTREGUE, pedido);
+            assertNotNull(resultado);
+            assertEquals(StatusPedido.ENTREGUE, pedidoMock.getStatus());
+            assertNotNull(pedidoMock.getDataEntrega());
 
+        }
+
+
+        @Test
+        void deveLancarExcecaoQuandoPedidoNaoExistir() {
+            // Arrange
+            when(pedidoRepository.porIdComItens(1L)).thenReturn(null);
+
+            // Act & Assert
+            RegraDeNegocioException exception = assertThrows(
+                    RegraDeNegocioException.class,
+                    () -> pedidoService.entregarPedido(1L)
+            );
+
+            assertEquals("Pedido com id: 1 não encontrado.", exception.getMessage());
+        }
+
+        @Test
+        void deveLancarExcecaoQuandoPedidoNaoTiverEntregadorVinculado() {
+            // Arrange
+
+            pedido.setId(1L);
+            pedido.setStatus(StatusPedido.PRONTO);
+            when(pedido.isPedidoSemEntregadorVinculado()).thenReturn(true);
+
+            when(pedidoRepository.porIdComItens(1L)).thenReturn(pedido);
+
+            // Act & Assert
+            RegraDeNegocioException exception = assertThrows(
+                    RegraDeNegocioException.class,
+                    () -> pedidoService.entregarPedido(1L)
+            );
+
+            assertEquals("Pedido com id: 1 sem entregador vinvulado.", exception.getMessage());
+        }
+
+        @Test
+        void deveLancarExcecaoQuandoPedidoJaEstiverEntregue() {
+            // Arrange
+            Pedido pedidoMock = Util.gerarPedidoComEntregador();
+            pedidoMock.setStatus(StatusPedido.ENTREGUE);
+
+            when(pedidoRepository.porIdComItens(1L)).thenReturn(pedidoMock);
+
+            // Act & Assert
+            RegraDeNegocioException exception = assertThrows(
+                    RegraDeNegocioException.class,
+                    () -> pedidoService.entregarPedido(1L)
+            );
+
+            assertEquals("Pedido com id 1 já consta como entregue.", exception.getMessage());
         }
 
     }

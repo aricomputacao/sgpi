@@ -43,7 +43,6 @@ class PedidoRepositoryTest {
                     .isNotNull()
                     .isEqualTo(pedido);
             assertThat(pedidoSalvo).extracting(Pedido::getId).isEqualTo(pedido.getId());
-            assertThat(pedidoSalvo).extracting(Pedido::getEnderecoDestino).isEqualTo(pedido.getEnderecoDestino());
         }
     }
     @Nested
@@ -66,7 +65,6 @@ class PedidoRepositoryTest {
             assertThat(pedidoSalvo).isPresent().contains(pedido);
             pedidoSalvo.ifPresent(pedidoArmazenado -> {
                 assertThat(pedidoArmazenado.getId()).isEqualTo(pedidoId);
-                assertThat(pedidoArmazenado.getEnderecoDestino()).isEqualTo(pedido.getEnderecoDestino());
             });
         }
 

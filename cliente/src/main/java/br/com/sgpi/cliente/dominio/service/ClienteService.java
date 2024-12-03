@@ -40,6 +40,13 @@ public class ClienteService {
         return clienteMapper.entityToDto(cliente);
     }
 
+    public ClienteDto consultarUmCliente(String cpf) {
+        Cliente cliente = (Cliente) clienteRepository
+                .findByCpf(cpf)
+                .orElseThrow(EntityExistsException::new);
+        return clienteMapper.entityToDto(cliente);
+    }
+
     public Cliente atualizarCliente(ClienteDto clienteDto) {
         Cliente clienteExistente = clienteRepository
                 .findById(clienteDto.id())

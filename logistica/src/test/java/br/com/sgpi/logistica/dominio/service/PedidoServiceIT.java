@@ -2,7 +2,6 @@ package br.com.sgpi.logistica.dominio.service;
 
 import br.com.sgpi.logistica.dominio.enumeration.StatusEntregador;
 import br.com.sgpi.logistica.dominio.enumeration.StatusPedido;
-import br.com.sgpi.logistica.dominio.model.dto.ItemDto;
 import br.com.sgpi.logistica.dominio.model.dto.PedidoDto;
 import br.com.sgpi.logistica.dominio.model.entity.Entregador;
 import br.com.sgpi.logistica.dominio.model.entity.Pedido;
@@ -22,9 +21,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -51,15 +49,16 @@ public class PedidoServiceIT {
     @Autowired
     private PedidoMapper pedidoMapper;
 
+    @Autowired
+    private ClienteClient clienteClient;
+
     @Test
     @Order(1)
     void deveCriarERecuperarPedido() {
         // Arrange: Cria dados para o teste
         Entregador entregador = registrarEntregador();
 
-        PedidoDto pedidoDto = new PedidoDto();
-        pedidoDto.setEnderecoDestino("TEste");
-        pedidoDto.setItens(List.of(new ItemDto(1L, 2, "Produto A")));
+        PedidoDto pedidoDto = Util.gerarPedidoDto();
         pedidoDto.setEntregador(entregador);
 
         // Act: Cria o pedido
@@ -70,7 +69,7 @@ public class PedidoServiceIT {
         Pedido pedidoSalvo = pedidoRepository.findById(pedidoCriado.getId()).orElseThrow();
         assertEquals(pedidoCriado.getId(), pedidoSalvo.getId());
         assertEquals(StatusPedido.PRONTO, pedidoSalvo.getStatus());
-        assertEquals(1, pedidoSalvo.getItens().size());
+        assertEquals(2, pedidoSalvo.getItens().size());
     }
 
     @Test
@@ -125,11 +124,29 @@ public class PedidoServiceIT {
     }
 
     @Test
+    void deveEntregarPedidoComSucesso() {
+        // Arrange
+
+        Pedido pedido = Util.gerarPedido();
+        Entregador entregador = registrarEntregador();
+        pedido.setEntregador(entregador);
+        pedido =  pedidoRepository.save(pedido);
+
+        // Act
+        PedidoDto pedidoDto = pedidoService.entregarPedido(pedido.getId());
+
+        // Assert
+        assertNotNull(pedidoDto);
+        assertEquals(StatusPedido.ENTREGUE, pedidoDto.getStatus());
+        assertNotNull(pedidoDto.getDataEntrega());
+    }
+
+
+    @Test
     void deveEntregarPedido() {
         // Arrange: Cria um pedido no banco de dados
         Pedido pedido = registrarPedido();
         Entregador entregador = registrarEntregador();
-
         pedido.setEntregador(entregador);
 
         // Act: Marca o pedido como entregue
@@ -149,6 +166,14 @@ public class PedidoServiceIT {
     private Pedido registrarPedido() {
         Pedido pedido = Util.gerarPedido();
         pedido.setStatus(StatusPedido.PRONTO);
+        return pedidoRepository.save(pedido);
+    }
+
+    private Pedido registrarPedidoComEntregador() {
+        Pedido pedido = Util.gerarPedido();
+        pedido.setStatus(StatusPedido.PRONTO);
+        Entregador entregador = registrarEntregador();
+        pedido.setEntregador(entregador);
         return pedidoRepository.save(pedido);
     }
 }

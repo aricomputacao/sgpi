@@ -35,7 +35,7 @@ public class Cliente {
 
     @CPF
     @NotEmpty
-    @Column(name = "cli_cpf", nullable = false, updatable = false)
+    @Column(name = "cli_cpf", nullable = false, updatable = false, unique = true)
     private String cpf;
 
     @NotEmpty

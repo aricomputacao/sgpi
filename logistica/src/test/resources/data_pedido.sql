@@ -17,8 +17,8 @@ INSERT INTO logistica.item(
 VALUES (998,'Produdo D', 2);
 
 INSERT INTO logistica.pedido(
-    ped_id, ped_data_entrada, ped_destino, ped_status)
-VALUES (995,current_date, 'teste', 'PRONTO');
+    ped_id, ped_data_entrada, ped_destino, ped_status, ped_cpf_cliente)
+VALUES (995,current_date, 'teste', 'PRONTO', '00522240313');
 
 INSERT INTO logistica.pedido_item(
     pedido_id, ite_id)
@@ -30,8 +30,8 @@ INSERT INTO logistica.pedido_item(
 VALUES (995, 996);
 
 INSERT INTO logistica.pedido(
-   ped_id, ped_data_entrada, ped_destino, ped_status)
-VALUES (996,current_date, 'teste', 'PRONTO');
+   ped_id, ped_data_entrada, ped_destino, ped_status, ped_cpf_cliente)
+VALUES (996,current_date, 'teste', 'PRONTO', '00522240313');
 
 INSERT INTO logistica.pedido_item(
     pedido_id, ite_id)

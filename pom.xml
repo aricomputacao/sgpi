@@ -10,6 +10,8 @@
     <modules>
         <module>logistica</module>
         <module>cliente</module>
+        <module>produto</module>
+        <module>pedido</module>
         <module>server</module>
         <module>gateway</module>
     </modules>

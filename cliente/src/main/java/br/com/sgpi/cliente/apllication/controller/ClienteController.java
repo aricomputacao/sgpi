@@ -37,6 +37,12 @@ public class ClienteController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<ClienteDto> consultarPorCpf(@PathVariable @NotNull String cpf) {
+        ClienteDto dto = clienteService.consultarUmCliente(cpf);
+        return ResponseEntity.ok(dto);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ClienteDto> cadastrarCliente(@RequestBody @Valid ClienteDto cliente) {
@@ -57,16 +63,4 @@ public class ClienteController {
         clienteService.exluirCliente(id);
     }
 
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("/{cpf}/comunicar-entrega")
-    public void comunicarEntrega(@PathVariable String cpf){
-        System.out.println(String.format("Requisição respondida pela instância executando na porta %s", cpf));
-    }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("/{cpf}/comunicar-saida")
-    public void comunicarSaida(@PathVariable String cpf){
-        System.out.println(String.format("Requisição respondida pela instância executando na porta %s", cpf));
-    }
 }

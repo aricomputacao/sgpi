@@ -4,6 +4,7 @@
     <option name="moduleMapping">
       <map>
         <entry key="logistica" value="sle" />
+        <entry key="pedido" value="Pedido" />
       </map>
     </option>
   </component>

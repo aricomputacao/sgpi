@@ -4,9 +4,7 @@ import br.com.sgpi.logistica.dominio.enumeration.StatusPedido;
 import br.com.sgpi.logistica.dominio.util.validators.Criacao;
 import br.com.sgpi.logistica.dominio.util.validators.Present;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -21,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = "ped_id")
+@EqualsAndHashCode(of = "id")
 public class Pedido {
 
     @Id
@@ -51,9 +49,22 @@ public class Pedido {
     @Column(name = "ped_cpf_cliente", nullable = false, updatable = false)
     private String cpfCliente;
 
-    @NotEmpty
-    @Column(name = "ped_destino", nullable = false)
-    private String enderecoDestino;
+    @NotBlank
+    @Column(name = "ped_nome_cliente", nullable = false, updatable = false)
+    private String nomeCliente;
+
+    @NotBlank
+    @Column(name = "ped_cidade_cliente", nullable = false, updatable = false)
+    private String cidadeCliente;
+
+    @NotBlank
+    @Column(name = "ped_endereco_cliente", nullable = false, updatable = false)
+    private String enderecoCliente;
+
+    @NotBlank
+    @Email
+    @Column(name = "ped_email_cliente", nullable = false, updatable = false)
+    private String emailCliente;
 
     @ManyToOne
     @JoinColumn(name = "ent_id", referencedColumnName = "ent_id",

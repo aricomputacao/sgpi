@@ -58,7 +58,7 @@ public class Util {
                 .dataEntrada(LocalDateTime.now())
                 .status(StatusPedido.PRONTO)
                 .itens(itens)
-                .enderecoDestino("Rua do destino, Fortaleza-CE")
+                .cpfCliente("00522240313")
                 .build();
     }
 
@@ -76,6 +76,7 @@ public class Util {
         return PedidoDto.builder()
                 .dataEntrada(LocalDateTime.now())
                 .itens(itens)
+                .cpfCliente("00522240313")
                 .enderecoDestino("Rua do destino, Fortaleza-CE")
                 .build();
     }
@@ -94,8 +95,21 @@ public class Util {
         return Pedido.builder()
                 .dataEntrada(LocalDateTime.now().minusMinutes(6))
                 .status(StatusPedido.PRONTO)
+                .cpfCliente("00522240313")
                 .itens(itens)
-                .enderecoDestino("Rua do destino, Fortaleza-CE")
                 .build();
+    }
+
+    public static Pedido gerarPedidoComEntregador() {
+        Long id = 1L;
+        Entregador entregador = Util.gerarEntregador();
+        entregador.setId(id);
+        Pedido pedidoMock = new Pedido();
+        pedidoMock.setId(id);
+        pedidoMock.setStatus(StatusPedido.PRONTO);
+        pedidoMock.setEntregador(entregador);
+        pedidoMock.setCpfCliente("00522240313");
+
+        return pedidoMock;
     }
 }
