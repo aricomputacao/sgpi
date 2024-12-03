@@ -25,13 +25,11 @@ O **SGPI** é uma aplicação modular para gestão integrada de processos, abran
 3. Clone este repositório:
    ```bash
    git clone <URL_DO_REPOSITORIO>
-
-    Navegue até o diretório raiz do projeto:
-
-cd sgpi-main
-
-Compile o projeto:
-
+4. Navegue até o diretório raiz do projeto:
+	```bash
+	cd sgpi-main
+5. Compile o projeto:
+	```bash
     mvn clean install
 
 ## Uso
