@@ -64,6 +64,11 @@ O **SGPI** é uma 🌀 aplicação modular para gestão integrada de processos, 
 - **produto/**: 🛒 Gerenciamento de produtos e catálogos.
 - **server/**: 🌐 Configuração e gerenciamento do servidor central.
 
+## Desenho da Arquitetura
+
+![2024-10-0122-49-35-ezgif com-crop](https://raw.githubusercontent.com/aricomputacao/sgpi/refs/heads/main/arquitetura.png)
+
+
 Cada módulo segue a convenção padrão de projetos Java:
 
 - `src/main/java`: Código-fonte principal.

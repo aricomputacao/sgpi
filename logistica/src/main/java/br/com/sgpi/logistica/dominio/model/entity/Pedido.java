@@ -71,7 +71,7 @@ public class Pedido {
             foreignKey = @ForeignKey(name = "fk_entregador"))
     private Entregador entregador;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true)
     @JoinTable(
             name = "pedido_item",schema = "logistica",// Nome da tabela de junção
             uniqueConstraints = @UniqueConstraint(name = "uk_item", columnNames = {"ite_id"}),

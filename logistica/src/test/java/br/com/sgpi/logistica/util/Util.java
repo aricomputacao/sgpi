@@ -59,6 +59,10 @@ public class Util {
                 .status(StatusPedido.PRONTO)
                 .itens(itens)
                 .cpfCliente("00522240313")
+                .cidadeCliente("Sobral")
+                .emailCliente("email@email.com")
+                .nomeCliente("Nome")
+                .enderecoCliente("Endereco")
                 .build();
     }
 
@@ -77,6 +81,10 @@ public class Util {
                 .dataEntrada(LocalDateTime.now())
                 .itens(itens)
                 .cpfCliente("00522240313")
+                .cidadeCliente("Sobral")
+                .emailCliente("teste@gmail.com")
+                .enderecoCliente("teste")
+                .nomeCliente("Carlos")
                 .enderecoDestino("Rua do destino, Fortaleza-CE")
                 .build();
     }

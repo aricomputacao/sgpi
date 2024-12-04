@@ -43,9 +43,6 @@ class PedidoServiceTest {
     private PedidoService pedidoService;
 
     @Mock
-    private ClienteClient clienteClient;
-
-    @Mock
     private PedidoRepository pedidoRepository;
 
     @Mock

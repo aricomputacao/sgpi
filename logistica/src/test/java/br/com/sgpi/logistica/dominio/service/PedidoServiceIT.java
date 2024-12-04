@@ -49,9 +49,6 @@ public class PedidoServiceIT {
     @Autowired
     private PedidoMapper pedidoMapper;
 
-    @Autowired
-    private ClienteClient clienteClient;
-
     @Test
     @Order(1)
     void deveCriarERecuperarPedido() {
