@@ -90,6 +90,7 @@ public class PedidoService {
         return pedidoMapper.entityToDto(pedidoAlocado );
     }
 
+    @Transactional
     public PedidoDto entregarPedido(Long id) {
         Pedido pedido = repository.porIdComItens(id);
         if (pedido == null) {

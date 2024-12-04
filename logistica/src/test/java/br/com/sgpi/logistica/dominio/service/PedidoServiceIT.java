@@ -22,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -127,7 +126,7 @@ public class PedidoServiceIT {
         Pedido pedido = Util.gerarPedido();
         Entregador entregador = registrarEntregador();
         pedido.setEntregador(entregador);
-        pedido =  pedidoRepository.save(pedido);
+        pedido = pedidoRepository.save(pedido);
 
         // Act
         PedidoDto pedidoDto = pedidoService.entregarPedido(pedido.getId());
@@ -150,7 +149,7 @@ public class PedidoServiceIT {
         pedidoService.entregarPedido(pedido.getId());
 
         // Assert: Verifica se o pedido foi entregue
-        Pedido pedidoEntregue = pedidoRepository.findById(pedido.getId()).orElseThrow();
+        Pedido pedidoEntregue = pedidoRepository.porIdComItens(pedido.getId());
         assertEquals(StatusPedido.ENTREGUE, pedidoEntregue.getStatus());
         assertNotNull(pedidoEntregue.getDataEntrega());
     }
