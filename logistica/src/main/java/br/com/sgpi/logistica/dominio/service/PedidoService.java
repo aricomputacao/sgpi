@@ -57,7 +57,7 @@ public class PedidoService {
         itemPedidoRepository.saveAll(pedido.getItens());
         pedido.setItens(carregarItensPersistidos(pedido.getItens()));
         pedido.setEntregador(dto.getEntregador());
-        repository.save(pedido);
+        pedido = repository.save(pedido);
         log.info("****** Pedido: {} salvo com sucesso.", pedido.getId());
         return pedidoMapper.entityToDto(pedido);
     }
@@ -87,7 +87,6 @@ public class PedidoService {
         repository.vincularEntregador(pedido.get(), entregador.get());
         log.info("****** Pedido: {} saindo para entrega.", pedido.get().getId());
         Pedido pedidoAlocado = repository.porIdComItens(idPedido);
-        clienteClient.comunicarSaida(pedidoAlocado.getCpfCliente());
         return pedidoMapper.entityToDto(pedidoAlocado );
     }
 
@@ -102,10 +101,7 @@ public class PedidoService {
         if (pedido.isEntregue()) {
             throw new RegraDeNegocioException("Pedido com id "+id+" já consta como entregue.");
         }
-        pedido.setDataEntrega(LocalDateTime.now());
-        pedido.setStatus(StatusPedido.ENTREGUE);
-        repository.save(pedido);
-        clienteClient.comunicarEntrega(pedido.getCpfCliente());
+        repository.atualizarStatusEDataEntrega(StatusPedido.ENTREGUE, LocalDateTime.now(), pedido.getId());
         log.info("****** Pedido: {} entregue com sucesso.", pedido.getId());
         return pedidoMapper.entityToDto(pedido);
     }
